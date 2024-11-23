@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Cabs</title>
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+	rel="stylesheet">
+</head>
+<body>
+	<h1>All Cabs</h1>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>From Location</th>
+				<th>To Location</th>
+				<th>Cab Type</th>
+				<th>Rate (USD)</th>
+				<th>Passenger</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="cab : ${cabList}">
+				<td th:text="${cab.cabId}"></td>
+				<td th:text="${cab.fromLocation}"></td>
+				<td th:text="${cab.toLocation}"></td>
+				<td th:text="${cab.typeOfCab}"></td>
+				<td th:text="${cab.rate}"></td>
+				<td th:text="${cab.passenger}"></td>
+				<!-- Delete button with a delete action -->
+				<td>
+					<button class="btn btn-danger" th:attr="data-cab-id=${cab.cabId}"
+						onclick="deleteCab(event)">Delete</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<a href="/" class="btn btn-primary">Back to Home</a>
+	<button class="btn btn-danger" onclick="deleteAllCabs()">Delete All</button>
+	<script>
+	//delete selected cab
+	 function deleteCab(event) {
+         const cabId = event.target.getAttribute("data-cab-id");
+         console.log("cabId:", cabId);
+         if (confirm("Are you sure you want to delete this cab?")) {
+        	 fetch("/bookcab/deletecab?id=" + cabId, {
+                 method: "DELETE"
+             })
+             .then(response => {
+                 if (response.ok) {
+                     alert("Cab deleted successfully!");
+                     location.reload(); // Reload the page to reflect the deletion
+                 } 
+             })
+             .catch(error => {
+                 console.error("Error:", error);
+                 alert("Error deleting cab");
+             });
+         }
+     }
+	 
+	 // delete all cabs
+     function deleteAllCabs() {
+         if (confirm("Are you sure you want to delete all cabs? This action cannot be undone.")) {
+             fetch("/bookcab/deleteallcabs", {
+                 method: "DELETE"
+             })
+             .then(response => {
+                 if (response.ok) {
+                     alert("All cabs deleted successfully!");
+                     location.reload(); // Reload the page to reflect the deletion
+                 } else {
+                     alert("Error deleting all cabs.");
+                 }
+             })
+             .catch(error => {
+                 console.error("Error:", error);
+                 alert("Error deleting all cabs.");
+             });
+         }
+     }
+    </script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</body>
+</html>

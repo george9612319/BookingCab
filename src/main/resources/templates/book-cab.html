@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cab Booking</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+		 .custom-width {
+            max-width: 200px;
+        }
+        
+        .btn-custom {
+        width: 200px;
+        height: 50px;
+        border-radius: 10px;
+    	}
+    	
+    	.center-field {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    	}
+    	
+    	.button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+    	}
+    	
+    	 .border-box {
+        border: 2px solid #007bff;
+        border-radius: 30px;
+        padding: 20px;
+        max-width: 400px;
+        width: 100%;
+        margin: 0 auto;
+    	}
+    	label {
+        font-size: 18px;
+        font-weight: bold;
+    	}
+</style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Cab Booking</h1>
+        <div class="border-box">
+        <form id="bookingForm" onsubmit="submitForm(event)">
+            <div class="form-group center-field">
+                <label for="typeOfCab">Type of Cab:</label>
+                <select class="form-control custom-width mx-auto" id="typeOfCab" name="typeOfCab" required>
+                    <option value="Standard">Standard</option>
+                    <option value="Luxury">Luxury</option>
+                </select>
+            </div>
+
+            <div class="form-group center-field">
+                <label for="fromLocation">From Location:</label>
+               	<select class="form-control custom-width mx-auto" id="fromLocation" name="fromLocation" required>
+               		<option value="New York">New York</option>
+                    <option value="Los Angeles">Los Angeles</option>
+                    <option value="San Francisco">San Francisco</option>
+                    <option value="San Diego">San Diego</option>
+               	</select>
+            </div>
+
+            <div class="form-group center-field">
+                <label for="toLocation">To Location:</label>
+                <select class="form-control custom-width mx-auto" id="toLocation" name="toLocation" required>
+               		<option value="New York">New York</option>
+                    <option value="Los Angeles">Los Angeles</option>
+                    <option value="San Francisco">San Francisco</option>
+                    <option value="San Diego">San Diego</option>
+               	</select>
+            </div>
+            
+            <div class="form-group center-field">
+                <label for="passenger">Number of Passengers:</label>
+                <input type="number" class="form-control custom-width mx-auto" id="passenger" name="passenger" placeholder="Enter number of passengers" min="1" max="4" required>
+            </div>
+			<div class="button-container">
+            	<button type="submit" class="btn btn-primary btn-lg btn-block btn-custom">Book Now</button>
+            	<a href="/" class="btn btn-primary btn-lg mt-3 btn-custom">Back to Home</a>
+           	</div>
+        </form>
+        </div>
+    </div>
+    
+    <script>
+        // Form validation
+        function validateForm() {
+            var fromLocation = document.getElementById("fromLocation").value;
+            var toLocation = document.getElementById("toLocation").value;
+
+            if (fromLocation.trim() === toLocation.trim()) {
+                alert("From Location and To Location cannot be the same.");
+                return false; // if fromLocation equals to toLocation refuse to submit form
+            }
+            return true; // else allow to submit form
+        }
+
+        // Form submission
+        function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // First, run form validation
+            if (!validateForm()) {
+                return; // If validation fails, don't proceed
+            }
+
+            // If validation passes, proceed with form submission using fetch
+            const typeOfCab = document.getElementById("typeOfCab").value;
+            const fromLocation = document.getElementById("fromLocation").value;
+            const toLocation = document.getElementById("toLocation").value;
+            const passenger = document.getElementById("passenger").value;
+            
+            const formData = {
+                typeOfCab: typeOfCab,
+                fromLocation: fromLocation,
+                toLocation: toLocation,
+                passenger: passenger
+            };
+
+            // Send AJAX request with fetch
+            fetch("/bookcab/addcab", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text(); // Handle response from server
+                } else {
+                    throw new Error("Request failed");
+                }
+            })
+            .then(data => {
+                document.body.innerHTML = data; // Show response data in the page
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

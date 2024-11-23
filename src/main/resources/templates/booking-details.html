@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Booking Details</h1>
+        <table class="table table-bordered">
+            <tr>
+                <th>Type of Cab</th>
+                <td th:text="${cab.typeOfCab}"></td>
+            </tr>
+            <tr>
+                <th>From Location</th>
+                <td th:text="${cab.fromLocation}"></td>
+            </tr>
+            <tr>
+                <th>To Location</th>
+                <td th:text="${cab.toLocation}"></td>
+            </tr>
+            <tr>
+                <th>Passenger Number</th>
+                <td th:text="${cab.passenger}"></td>
+            </tr>
+            <tr>
+                <th>Rate (USD)</th>
+                <td th:text="${cab.rate}"></td>
+            </tr>
+        </table>
+        <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+</body>
+</html>
